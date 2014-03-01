@@ -1,0 +1,28 @@
+.util_widget_parentvalue {
+    display: block;
+    max-height: 100px;
+    margin: 6px 16px 0 0;
+    padding: 6px;
+    border: 1px solid rgb(170, 170, 170);
+    border-radius: 3px;
+    background: rgb(239, 245, 250);
+    overflow-y: auto;
+}
+
+    .util_widget_parentvalue em.empty {
+        color: rgb(153, 153, 153);
+    }
+
+.w50 .util_widget_parentvalue {
+    margin-right: 31px;
+}
+
+h3.util_legend {
+    clear: both;
+    margin: 0;
+    padding: 30px 0 0 0;
+    border-bottom: 1px solid #ddd;
+    font-size: 100%;
+    color: #77ac45;
+    font-weight: normal;
+}
