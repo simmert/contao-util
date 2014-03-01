@@ -12,7 +12,8 @@ namespace Util;
  */
 abstract class ContentElement extends \ContentElement
 {
-    protected $session = null;
+    protected $session          = null,
+              $placeholderImage = '';
 
 
     public function generate()
@@ -71,10 +72,10 @@ abstract class ContentElement extends \ContentElement
         global $objPage;
 
         // Set placeholder image if any and empty
-        if (!$fileId && $GLOBALS['TL_CONFIG']['trip_placeholder_image'] == '') {
+        if (!$fileId && $this->placeholderImage == '') {
             return null;
-        } else if (!$fileId && $GLOBALS['TL_CONFIG']['trip_placeholder_image'] != '') {
-            $fileId = $GLOBALS['TL_CONFIG']['trip_placeholder_image'];
+        } else if (!$fileId && $this->placeholderImage != '') {
+            $fileId = $this->placeholderImage;
         }
         
         $image = \FilesModel::findByPk($fileId);
@@ -124,10 +125,10 @@ abstract class ContentElement extends \ContentElement
         $meta = null;
 
         // Set placeholder image if any and empty
-        if (!$fileIds && $GLOBALS['TL_CONFIG']['trip_placeholder_image'] == '') {
+        if (!$fileIds && $this->placeholderImage == '') {
             return $images;
-        } else if (!$fileIds && $GLOBALS['TL_CONFIG']['trip_placeholder_image'] != '') {
-            $imageIds = array($GLOBALS['TL_CONFIG']['trip_placeholder_image']);
+        } else if (!$fileIds && $this->placeholderImage != '') {
+            $imageIds = array($this->placeholderImage);
         } else {
             $imageIds = deserialize($fileIds);
         }
@@ -192,7 +193,7 @@ abstract class ContentElement extends \ContentElement
     {
         $strLightboxId = 'lightbox[lb' . $this->id . ']';
         $imageContainer = new \stdClass();
-        $imageContainer->class = 'mm_image_' . $num;
+        $imageContainer->class = 'image_' . $num;
 
         $this->addImageToTemplate($imageContainer, $image, $GLOBALS['TL_CONFIG']['maxImageWidth'], $strLightboxId);
         

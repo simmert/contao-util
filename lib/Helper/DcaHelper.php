@@ -42,24 +42,4 @@ class DcaHelper
 
         return $options;
     }
-    
-    
-    public static function getLabelConsideringVat(&$labelSet)
-    {
-        if (!is_array($labelSet)) {
-            return $labelSet;
-        }
-
-        if ($GLOBALS['TL_CONFIG']['trip_vat_included'] == 1) {
-            $vatLabel = &$GLOBALS['TL_LANG']['tripmanager']['vat']['included'];
-        } else {
-            $vatLabel = &$GLOBALS['TL_LANG']['tripmanager']['vat']['excluded'];
-        }
-        
-        foreach ($labelSet as &$label) {
-            $label = sprintf($label, $GLOBALS['TL_CONFIG']['trip_currency_symbol'], $vatLabel);
-        }
-        
-        return $labelSet;
-    }
 }

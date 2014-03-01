@@ -12,14 +12,19 @@ namespace Util;
  */
 class CurrencyHelper
 {
-    public static function formatCurrency($value, $currencySymbol='')
+    protected static $currencySymbol = 'EUR',
+                     $vatIncluded    = false,
+                     $defaultVat     = 19;
+
+
+    public static function formatCurrency($value, $currencySymbol=null)
     {
         if ($value === null) {
             return null;
         }
         
-        if (!trim($currencySymbol)) {
-            $currencySymbol = $GLOBALS['TL_CONFIG']['trip_currency_symbol'];
+        if ($currencySymbol === null) {
+            $currencySymbol = static::$currencySymbol;
         }
 
         return $currencySymbol . ' ' . number_format($value, 2, ',' , '.');
@@ -40,7 +45,7 @@ class CurrencyHelper
     
     public static function getGross($value)
     {
-        if ($value !== null && $GLOBALS['TL_CONFIG']['trip_vat_included'] == 0) {
+        if ($value !== null && !static::$vatIncluded) {
             return self::net2gross($value);
         }
 
@@ -50,7 +55,7 @@ class CurrencyHelper
 
     public static function getNet($value)
     {
-        if ($value !== null && $GLOBALS['TL_CONFIG']['trip_vat_included'] == 1) {
+        if ($value !== null && static::$vatIncluded) {
             return self::gross2net($value);
         }
 
@@ -61,9 +66,33 @@ class CurrencyHelper
     public static function getVat($vat=null)
     {
         if ($vat === null) {
-            $vat = $GLOBALS['TL_CONFIG']['trip_default_vat'];
+            $vat = static::$defaultVat;
         }
         
         return intval($vat) / 100 + 1;
+    }
+    
+    
+    public static function getLabelConsideringVat(&$labelSet, $currencySymbol=null)
+    {
+        if (!is_array($labelSet)) {
+            return $labelSet;
+        }
+        
+        if ($currencySymbol === null) {
+            $currencySymbol = static::$currencySymbol;
+        }
+
+        if (static::$vatIncluded) {
+            $vatLabel = &$GLOBALS['TL_LANG']['util']['helper']['currency']['vat_included'];
+        } else {
+            $vatLabel = &$GLOBALS['TL_LANG']['util']['helper']['currency']['vat_excluded'];
+        }
+        
+        foreach ($labelSet as &$label) {
+            $label = sprintf($label, $currencySymbol, $vatLabel);
+        }
+        
+        return $labelSet;
     }
 }
