@@ -1,0 +1,9 @@
+<section class="util_widget util_widget_parentvalue">
+    <?php
+        if (trim($this->value)) {
+            echo $this->value;
+        } else {
+            echo '<em class="empty">' . $GLOBALS['TL_LANG']['util']['widget']['parentValue']['empty'] . '</em>';
+        }
+    ?>
+</section>

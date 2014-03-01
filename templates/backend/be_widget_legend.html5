@@ -1,0 +1,1 @@
+<h3 class="util_legend"><?php echo $this->legend ?></h3>
