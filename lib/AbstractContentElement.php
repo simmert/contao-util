@@ -10,7 +10,7 @@ namespace Util;
  * @author André Simmert <contao@simmert.net>
  * @license http://opensource.org/licenses/MIT MIT 
  */
-abstract class ContentElement extends \ContentElement
+abstract class AbstractContentElement extends \ContentElement
 {
     protected $session          = null,
               $placeholderImage = '';

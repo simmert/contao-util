@@ -14,7 +14,7 @@ class CurrencyHelper
 {
     protected static $currencySymbol = 'EUR',
                      $vatIncluded    = false,
-                     $defaultVat     = 19;
+                     $vat            = 19;
 
 
     public static function formatCurrency($value, $currencySymbol=null)
@@ -43,20 +43,28 @@ class CurrencyHelper
     }
     
     
-    public static function getGross($value)
+    public static function getGross($value, $vat=null, $vatIncluded=null)
     {
-        if ($value !== null && !static::$vatIncluded) {
-            return self::net2gross($value);
+        if ($vatIncluded === null) {
+            $vatIncluded = static::$vatIncluded;
+        }
+
+        if ($value !== null && !$vatIncluded) {
+            return self::net2gross($value, $vat);
         }
 
         return $value;
     }
 
 
-    public static function getNet($value)
+    public static function getNet($value, $vat=null, $vatIncluded=null)
     {
-        if ($value !== null && static::$vatIncluded) {
-            return self::gross2net($value);
+        if ($vatIncluded === null) {
+            $vatIncluded = static::$vatIncluded;
+        }
+
+        if ($value !== null && $vatIncluded) {
+            return self::gross2net($value, $vat);
         }
 
         return $value;
@@ -66,7 +74,7 @@ class CurrencyHelper
     public static function getVat($vat=null)
     {
         if ($vat === null) {
-            $vat = static::$defaultVat;
+            $vat = static::$vat;
         }
         
         return intval($vat) / 100 + 1;
