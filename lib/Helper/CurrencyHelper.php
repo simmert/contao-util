@@ -81,7 +81,7 @@ class CurrencyHelper
     }
     
     
-    public static function getLabelConsideringVat(&$labelSet, $currencySymbol=null)
+    public static function getLabelConsideringVat(&$labelSet, $currencySymbol=null, $vatIncluded=null)
     {
         if (!is_array($labelSet)) {
             return $labelSet;
@@ -90,8 +90,12 @@ class CurrencyHelper
         if ($currencySymbol === null) {
             $currencySymbol = static::$currencySymbol;
         }
+        
+        if ($vatIncluded === null) {
+            $vatIncluded = static::$vatIncluded;
+        }
 
-        if (static::$vatIncluded) {
+        if ($vatIncluded) {
             $vatLabel = &$GLOBALS['TL_LANG']['util']['helper']['currency']['vat_included'];
         } else {
             $vatLabel = &$GLOBALS['TL_LANG']['util']['helper']['currency']['vat_excluded'];
