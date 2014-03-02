@@ -24,6 +24,24 @@ class GeneralHelper
     }
     
     
+    public static function parseCollection(\Contao\Model\Collection $collection=null, array $callback=null)
+    {
+        $parsedElements = array();
+        
+        while ($collection !== null && $collection->next()) {
+            if ($callback === null) {
+                $parsedElements[] = $collection->current()->toArray();
+            } else {
+                $parsedElements[] = call_user_func($callback, $collection->current());
+            }
+        }
+        
+        self::addCssClassToListItems($parsedElements);
+        
+        return $parsedElements;
+    }
+    
+    
     public static function parseTableWizdardData($data)
     {
         if (trim($data) == '') {
