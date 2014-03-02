@@ -38,6 +38,32 @@ abstract class AbstractModel extends \Model
     }
     
     
+    public function generateHash()
+    {
+        $row = $this->row();
+        
+        // Remove fields that do not represent data changes
+        $metaFields = $this->getMetaFields();
+        
+        foreach ($metaFields as &$field) {
+            if (isset($row[$field])) {
+                unset($row[$field]);
+            }
+        }
+        
+        return crc32(serialize($row));
+    }
+    
+    
+    /**
+     * Return array of fields that do not represent model changes
+     */
+    protected function getMetaFields()
+    {
+        return array('tstamp', 'hash');
+    }
+    
+    
     protected function translate(array &$translation)
     {
         foreach ($translation as $field => $value) {
