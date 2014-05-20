@@ -38,13 +38,13 @@ class ParentValue extends \Widget
     {
         $statement = \Database::getInstance()->prepare('SELECT ' . $this->field . ' FROM ' . $this->objDca->parentTable . ' WHERE id = ?');
         $result = $statement->execute($this->activeRecord->pid);
-        
+
         if ($result->numRows == 0) {
             return null;
         }
         
         $record = $result->row();
 
-        return $record[$this->field];
+        return $record[$this->field] === null ? '' : $record[$this->field];
     }
 }
