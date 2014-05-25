@@ -16,6 +16,7 @@ class FragmentTemplate extends \FrontendTemplate
               $prefix           = '',
               $items            = array(),
               $itemWrapCssClass = '',
+              $itemScope        = null,
               $fragments        = array(),
               $blockContent     = '',
               $fragmentContent  = '';
@@ -54,9 +55,24 @@ class FragmentTemplate extends \FrontendTemplate
             }
         }
         
-        // Wrap item in class
+        // Wrap item if multiple items are rendered
+        if ($item !== null) {
+            $this->fragmentContent .= '<article';
+        }
+
         if (trim($cssClass) != '') {
-            $this->fragmentContent .= '<article class="' . trim($cssClass) . '">';
+            $this->fragmentContent .= ' class="' . trim($cssClass) . '"';
+        }
+        
+        if (isset($item['scope'])) {
+            $this->fragmentContent .= ' itemscope itemtype="' . trim($item['scope']) . '"';
+        } else if ($this->itemScope !== null) {
+            $this->fragmentContent .= ' itemscope itemtype="' . trim($this->itemScope) . '"';
+        }
+        
+        // Close article tag
+        if ($item !== null) {
+            $this->fragmentContent .= '>';
         }
 
         foreach ($this->fragments as $block => &$fields) {
@@ -73,7 +89,7 @@ class FragmentTemplate extends \FrontendTemplate
         }
         
         // Close item wrap
-        if (trim($cssClass) != '') {
+        if ($item !== null) {
             $this->fragmentContent .= '</article>';
         }
     }
@@ -101,10 +117,11 @@ class FragmentTemplate extends \FrontendTemplate
     }
     
     
-    public function setMultipleItems(array $items, $itemWrapCssClass='')
+    public function setMultipleItems(array $items, $itemWrapCssClass='', $itemScope=null)
     {
         $this->items = $items;
         $this->itemWrapCssClass = $itemWrapCssClass;
+        $this->itemScope = $itemScope;
     }
 
 
