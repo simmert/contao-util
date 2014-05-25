@@ -8,7 +8,7 @@ namespace Util;
  * @package Util/Helper
  * @copyright Copyright (c) 2013-2014 André Simmert
  * @author André Simmert <contao@simmert.net>
- * @license http://opensource.org/licenses/MIT MIT 
+ * @license http://opensource.org/licenses/MIT MIT
  */
 class DcaHelper
 {
