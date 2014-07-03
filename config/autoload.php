@@ -29,6 +29,7 @@ ClassLoader::addClasses(array
 	'Util\AbstractContentElement' => 'system/modules/util/lib/AbstractContentElement.php',
 	'Util\AbstractModel'          => 'system/modules/util/lib/AbstractModel.php',
 	'Util\FragmentTemplate'       => 'system/modules/util/lib/FragmentTemplate.php',
+	'Util\ArrayHelper'            => 'system/modules/util/lib/Helper/ArrayHelper.php',
 	'Util\CurrencyHelper'         => 'system/modules/util/lib/Helper/CurrencyHelper.php',
 	'Util\DatabaseHelper'         => 'system/modules/util/lib/Helper/DatabaseHelper.php',
 	'Util\DcaHelper'              => 'system/modules/util/lib/Helper/DcaHelper.php',
