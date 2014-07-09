@@ -27,7 +27,7 @@ class CurrencyHelper
             $currencySymbol = static::$currencySymbol;
         }
 
-        return $currencySymbol . ' ' . number_format($value, 2, ',' , '.');
+        return $currencySymbol . '&nbsp;' . number_format($value, 2, ',' , '.');
     }
     
 
