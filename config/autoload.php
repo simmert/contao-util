@@ -27,6 +27,7 @@ ClassLoader::addClasses(array
 (
 	// Lib
 	'Util\AbstractContentElement' => 'system/modules/util/lib/AbstractContentElement.php',
+	'Util\AbstractMemberModel'    => 'system/modules/util/lib/AbstractMemberModel.php',
 	'Util\AbstractModel'          => 'system/modules/util/lib/AbstractModel.php',
 	'Util\FragmentTemplate'       => 'system/modules/util/lib/FragmentTemplate.php',
 	'Util\ArrayHelper'            => 'system/modules/util/lib/Helper/ArrayHelper.php',
