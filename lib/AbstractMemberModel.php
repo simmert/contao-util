@@ -75,11 +75,26 @@ abstract class AbstractMemberModel extends \MemberModel
     
     protected static function queryForCollection($sql, $params=array())
     {
+        $objResult = self::queryForResult($sql, $params);
+
+        return \Model\Collection::createFromDbResult($objResult, static::$strTable);
+    }
+    
+    
+    protected static function queryForArray($sql, $params=array())
+    {
+        $objResult = self::queryForResult($sql, $params);
+
+        return $objResult->fetchAllAssoc();
+    }
+    
+    
+    protected static function queryForResult($sql, $params=array())
+    {
         $objStatement = \Database::getInstance()->prepare($sql);
         $objStatement = static::preFind($objStatement);
         $objResult = $objStatement->execute($params);
-        $objResult = static::postFind($objResult);
         
-        return \Model\Collection::createFromDbResult($objResult, static::$strTable);
+        return static::postFind($objResult);
     }
 }
