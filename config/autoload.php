@@ -25,18 +25,18 @@ ClassLoader::addNamespaces(array
  */
 ClassLoader::addClasses(array
 (
-	// Lib
-	'Util\AbstractContentElement' => 'system/modules/util/lib/AbstractContentElement.php',
-	'Util\AbstractMemberModel'    => 'system/modules/util/lib/AbstractMemberModel.php',
-	'Util\AbstractModel'          => 'system/modules/util/lib/AbstractModel.php',
-	'Util\FragmentTemplate'       => 'system/modules/util/lib/FragmentTemplate.php',
-	'Util\ArrayHelper'            => 'system/modules/util/lib/Helper/ArrayHelper.php',
-	'Util\CurrencyHelper'         => 'system/modules/util/lib/Helper/CurrencyHelper.php',
-	'Util\DatabaseHelper'         => 'system/modules/util/lib/Helper/DatabaseHelper.php',
-	'Util\DcaHelper'              => 'system/modules/util/lib/Helper/DcaHelper.php',
-	'Util\FormHelper'             => 'system/modules/util/lib/Helper/FormHelper.php',
-	'Util\FragmentHelper'         => 'system/modules/util/lib/Helper/FragmentHelper.php',
-	'Util\GeneralHelper'          => 'system/modules/util/lib/Helper/GeneralHelper.php',
+	// Library
+	'Util\AbstractContentElement' => 'system/modules/util/library/AbstractContentElement.php',
+	'Util\AbstractMemberModel'    => 'system/modules/util/library/AbstractMemberModel.php',
+	'Util\AbstractModel'          => 'system/modules/util/library/AbstractModel.php',
+	'Util\FragmentTemplate'       => 'system/modules/util/library/FragmentTemplate.php',
+	'Util\ArrayHelper'            => 'system/modules/util/library/Helper/ArrayHelper.php',
+	'Util\CurrencyHelper'         => 'system/modules/util/library/Helper/CurrencyHelper.php',
+	'Util\DatabaseHelper'         => 'system/modules/util/library/Helper/DatabaseHelper.php',
+	'Util\DcaHelper'              => 'system/modules/util/library/Helper/DcaHelper.php',
+	'Util\FormHelper'             => 'system/modules/util/library/Helper/FormHelper.php',
+	'Util\FragmentHelper'         => 'system/modules/util/library/Helper/FragmentHelper.php',
+	'Util\GeneralHelper'          => 'system/modules/util/library/Helper/GeneralHelper.php',
 
 	// Widgets
 	'Util\Legend'                 => 'system/modules/util/widgets/Legend.php',
