@@ -23,6 +23,18 @@ abstract class AbstractMemberModel extends \MemberModel
     }
     
     
+    public function toArray()
+    {
+        $row = $this->row();
+
+        if (!isset($row['label'])) {
+            $row['label'] = $this->getLabel();
+        }
+        
+        return $row;
+    }
+    
+    
     public function getInvoiceAddress()
     {
         return trim(
