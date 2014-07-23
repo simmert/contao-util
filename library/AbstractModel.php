@@ -28,7 +28,13 @@ abstract class AbstractModel extends \Model
 
     public function toArray()
     {
-        return $this->row();
+        $row = $this->row();
+
+        if (!isset($row['label'])) {
+            $row['label'] = $this->getLabel();
+        }
+        
+        return $row;
     }
     
     
