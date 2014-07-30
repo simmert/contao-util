@@ -14,6 +14,7 @@ class FragmentTemplate extends \FrontendTemplate
 {
     protected $extension        = '',
               $prefix           = '',
+              $multiple         = false,
               $items            = array(),
               $itemWrapCssClass = '',
               $itemScope        = null,
@@ -25,7 +26,7 @@ class FragmentTemplate extends \FrontendTemplate
     public function parse($parseFragments=true)
     {
         if ($parseFragments) {
-            if (count($this->items) != 0) {
+            if ($this->multiple) {
                 $parentData = $this->arrData;
                 foreach ($this->items as &$item) {
                     $this->parseFragments($item);
@@ -119,6 +120,7 @@ class FragmentTemplate extends \FrontendTemplate
     
     public function setMultipleItems(array $items, $itemWrapCssClass='', $itemScope=null)
     {
+        $this->multiple = true;
         $this->items = $items;
         $this->itemWrapCssClass = $itemWrapCssClass;
         $this->itemScope = $itemScope;
