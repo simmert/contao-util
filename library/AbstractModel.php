@@ -13,6 +13,7 @@ namespace Util;
 abstract class AbstractModel extends \Model
 {
     protected static $translatable = false,
+                     $translateFrontendOnly = true,
                      $translations = array();
     
     
@@ -86,7 +87,7 @@ abstract class AbstractModel extends \Model
     
 	protected function preSave(array $arrSet)
 	{
-        if (TL_MODE == 'FE' && static::$translatable) {
+        if (static::$translatable && (!static::$translateFrontendOnly || TL_MODE == 'FE')) {
             throw new \LogicException('Trying to save a translatable model. This may result in overwriting the default language.');
         }
 
@@ -96,7 +97,7 @@ abstract class AbstractModel extends \Model
     
     protected static function postFind(\Database\Result $objResult)
     {
-        if (TL_MODE == 'FE' && static::$translatable) {
+        if (static::$translatable && (!static::$translateFrontendOnly || TL_MODE == 'FE')) {
             return static::fetchTranslations($objResult);
         }
         
