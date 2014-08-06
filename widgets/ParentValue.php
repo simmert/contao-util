@@ -14,21 +14,29 @@ class ParentValue extends \Widget
 {
     protected $strTemplate = 'be_widget_chk', // Template without label
               $field,
+              $render_callback = null,
               $nl2br = false;
 
 
     public function generate()
     {
-        $template = new \BackendTemplate('be_widget_parentvalue');
-        $template->value = $this->getValue();
+        $value = $this->getValue();
         
-        if ($template->value === null) {
+        if ($value === null) {
             return '';
         }
         
         if ($this->nl2br) {
-            $template->value = nl2br($template->value);
+            $value = nl2br($value);
         }
+        
+        // Trigger callback if set and valid
+        if ($this->render_callback !== null && is_callable($this->render_callback)) {
+            $value = call_user_func($this->render_callback, $this->activeRecord, $value);
+        }
+        
+        $template = new \BackendTemplate('be_widget_parentvalue');
+        $template->value = $value;
 
         return $template->parse();
     }
