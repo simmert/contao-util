@@ -17,7 +17,7 @@ class CurrencyHelper
                      $vat            = 19;
 
 
-    public static function formatCurrency($value, $currencySymbol=null)
+    public static function formatCurrency($value, $currencySymbol=null, $currencyAfter=false)
     {
         if ($value === null) {
             return null;
@@ -25,6 +25,10 @@ class CurrencyHelper
         
         if ($currencySymbol === null) {
             $currencySymbol = static::$currencySymbol;
+        }
+
+        if ($currencyAfter) {
+            return number_format($value, 2, ',' , '.') . '&nbsp;' . $currencySymbol;
         }
 
         return $currencySymbol . '&nbsp;' . number_format($value, 2, ',' , '.');
