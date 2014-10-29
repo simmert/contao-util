@@ -59,20 +59,18 @@ class FragmentTemplate extends \FrontendTemplate
         // Wrap item if multiple items are rendered
         if ($item !== null) {
             $this->fragmentContent .= '<article';
-        }
 
-        if (trim($cssClass) != '') {
-            $this->fragmentContent .= ' class="' . trim($cssClass) . '"';
-        }
+            if (trim($cssClass) != '') {
+                $this->fragmentContent .= ' class="' . trim($cssClass) . '"';
+            }
+
+            if (isset($item['scope'])) {
+                $this->fragmentContent .= ' itemscope itemtype="' . trim($item['scope']) . '"';
+            } else if ($this->itemScope !== null) {
+                $this->fragmentContent .= ' itemscope itemtype="' . trim($this->itemScope) . '"';
+            }
         
-        if (isset($item['scope'])) {
-            $this->fragmentContent .= ' itemscope itemtype="' . trim($item['scope']) . '"';
-        } else if ($this->itemScope !== null) {
-            $this->fragmentContent .= ' itemscope itemtype="' . trim($this->itemScope) . '"';
-        }
-        
-        // Close article tag
-        if ($item !== null) {
+            // Close article tag
             $this->fragmentContent .= '>';
         }
 
