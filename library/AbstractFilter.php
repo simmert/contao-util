@@ -40,8 +40,9 @@ abstract class AbstractFilter extends \Controller
 
         // Initialize the widgets
         $widgets = array();
-        foreach ($fields as &$field)
+        foreach ($fields as $name => &$field)
         {
+            $field['name'] = $name;
             $class = $GLOBALS[$context][$field['inputType']];
 
             // Continue if the class is not defined
@@ -50,9 +51,9 @@ abstract class AbstractFilter extends \Controller
             }
 
             $field['eval']['required'] = $field['eval']['mandatory'];
-            $widget = new $class($this->prepareForWidget($field, $field['name'], $field['value']));
+            $widget = new $class($this->prepareForWidget($field, $name, $field['value']));
 
-            $widgets[$field['name']] = $widget;
+            $widgets[$name] = $widget;
         }
 
         return $widgets;
