@@ -34,6 +34,25 @@ class MemberModel extends \Contao\MemberModel
         $GLOBALS['TL_MODELS'][static::getTable()] = get_class();
         return static::findBy(array($where), $params, array('order' => $filter->getOrderBy()));
     }
+    
+    
+    public static function findByBirthdayFilter(\Util\DateFilter $filter)
+    {
+        // TODO
+        return static::findAll();
+/*
+        SELECT
+         name,birthday,
+         FLOOR(DATEDIFF(DATE(NOW()),birthday) / 365.25) AS age_now,
+         FLOOR(DATEDIFF(DATE_ADD(DATE(NOW()),INTERVAL 30 DAY),birthday) / 365.25) AS age_future
+
+        FROM user
+
+        WHERE 1 = (FLOOR(DATEDIFF(DATE_ADD(DATE(NOW()),INTERVAL 30 DAY),birthday) / 365.25)) - (FLOOR(DATEDIFF(DATE(NOW()),birthday) / 365.25))
+
+        ORDER BY MONTH(birthday),DAY(birthday)
+*/
+    }
 
     
     protected static function appendWhereForDate(\DateTime $startDate, \DateTime $endDate, $field, &$where, array &$params)
