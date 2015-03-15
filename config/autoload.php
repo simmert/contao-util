@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2014 Leo Feyer
+ * Copyright (c) 2005-2015 Leo Feyer
  *
  * @package Util
  * @link    https://contao.org
@@ -27,9 +27,8 @@ ClassLoader::addClasses(array
 (
 	// Library
 	'Util\AbstractContentElement' => 'system/modules/util/library/AbstractContentElement.php',
-	'Util\AbstractFilter'         => 'system/modules/util/library/AbstractFilter.php',
-	'Util\AbstractMemberModel'    => 'system/modules/util/library/AbstractMemberModel.php',
-	'Util\AbstractModel'          => 'system/modules/util/library/AbstractModel.php',
+	'Util\AbstractFilter'         => 'system/modules/util/library/Filter/AbstractFilter.php',
+	'Util\DateFilter'             => 'system/modules/util/library/Filter/DateFilter.php',
 	'Util\FragmentTemplate'       => 'system/modules/util/library/FragmentTemplate.php',
 	'Util\ArrayHelper'            => 'system/modules/util/library/Helper/ArrayHelper.php',
 	'Util\CurrencyHelper'         => 'system/modules/util/library/Helper/CurrencyHelper.php',
@@ -38,6 +37,8 @@ ClassLoader::addClasses(array
 	'Util\FormHelper'             => 'system/modules/util/library/Helper/FormHelper.php',
 	'Util\FragmentHelper'         => 'system/modules/util/library/Helper/FragmentHelper.php',
 	'Util\GeneralHelper'          => 'system/modules/util/library/Helper/GeneralHelper.php',
+	'Util\AbstractMemberModel'    => 'system/modules/util/library/Model/AbstractMemberModel.php',
+	'Util\AbstractModel'          => 'system/modules/util/library/Model/AbstractModel.php',
 
 	// Widgets
 	'Util\Legend'                 => 'system/modules/util/widgets/Legend.php',

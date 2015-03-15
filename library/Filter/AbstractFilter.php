@@ -13,6 +13,9 @@ namespace Util;
  */
 abstract class AbstractFilter extends \Controller
 {
+    protected $orderBy = 'pid, id';
+
+
     public function __construct()
     {
         parent::__construct();
@@ -59,7 +62,22 @@ abstract class AbstractFilter extends \Controller
         return $widgets;
     }
 
+
+    public function setOrderBy($orderBy)
+    {
+        $this->orderBy = $orderBy;
+    }
+
+
+    public function getOrderBy()
+    {
+        return $this->orderBy;
+    }
     
+    
+    public function reset() {}
+
+
     abstract public function getFields();
     abstract public function getUrlParams($forceOutput=false);
     abstract public function isApplied();
