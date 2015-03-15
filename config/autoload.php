@@ -29,6 +29,7 @@ ClassLoader::addClasses(array
 	'Util\AbstractContentElement' => 'system/modules/util/library/AbstractContentElement.php',
 	'Util\AbstractFilter'         => 'system/modules/util/library/Filter/AbstractFilter.php',
 	'Util\DateFilter'             => 'system/modules/util/library/Filter/DateFilter.php',
+	'Util\MemberFilter'           => 'system/modules/util/library/Filter/MemberFilter.php',
 	'Util\FragmentTemplate'       => 'system/modules/util/library/FragmentTemplate.php',
 	'Util\ArrayHelper'            => 'system/modules/util/library/Helper/ArrayHelper.php',
 	'Util\CurrencyHelper'         => 'system/modules/util/library/Helper/CurrencyHelper.php',
@@ -39,6 +40,7 @@ ClassLoader::addClasses(array
 	'Util\GeneralHelper'          => 'system/modules/util/library/Helper/GeneralHelper.php',
 	'Util\AbstractMemberModel'    => 'system/modules/util/library/Model/AbstractMemberModel.php',
 	'Util\AbstractModel'          => 'system/modules/util/library/Model/AbstractModel.php',
+	'Util\MemberModel'            => 'system/modules/util/library/Model/MemberModel.php',
 
 	// Widgets
 	'Util\Legend'                 => 'system/modules/util/widgets/Legend.php',
