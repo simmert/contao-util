@@ -13,7 +13,7 @@ namespace Util;
  */
 class MemberFilter extends \Util\DateFilter
 {
-    protected $orderBy       = 'company, lastname, firstname',
+    protected $orderBy       = 'lastname, firstname',
               $dateReference = 'dateOfBirth';
 
     // TODO: Add more filter options for members

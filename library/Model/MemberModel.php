@@ -16,7 +16,7 @@ class MemberModel extends \Contao\MemberModel
     public static function findAll(array $options=array())
     {
         if (count($options) == 0) {
-            $options = array('order' => 'company, lastname, firstname');
+            $options = array('order' => 'lastname, firstname');
         }
         
         $GLOBALS['TL_MODELS'][static::getTable()] = get_class();
@@ -107,6 +107,30 @@ class MemberModel extends \Contao\MemberModel
         $dateOfBirth->setTimestamp($this->dateOfBirth);
 
         return $dateOfBirth;
+    }
+    
+    
+    public function getAge()
+    {
+        $dateOfBirth = $this->getDateOfBirth();
+        
+        if ($dateOfBirth === null) {
+            return null;
+        }
+        
+        return $dateOfBirth->diff(new \DateTime());
+    }
+    
+    
+    public function getAgeInYears()
+    {
+        $age = $this->getAge();
+        
+        if ($age !== null) {
+            return intval($age->format('%y'));
+        }
+        
+        return null;
     }
     
     
