@@ -11,7 +11,7 @@ namespace Util;
  * @author André Simmert <contao@simmert.net>
  * @license http://opensource.org/licenses/MIT MIT 
  */
-class MemberModel extends \MemberModel
+class MemberModel extends \Contao\MemberModel
 {
     public static function findAll(array $options=array())
     {
@@ -19,7 +19,32 @@ class MemberModel extends \MemberModel
             $options = array('order' => 'company, lastname, firstname');
         }
         
+        $GLOBALS['TL_MODELS'][static::getTable()] = get_class();
         return parent::findAll($options);
+    }
+    
+    
+    public static function findByFilter(\Util\MemberFilter $filter)
+    {
+        $where = '';
+        $params = array();
+
+        static::appendWhereForDate($filter->getStartDate(), $filter->getEndDate(), $filter->getDateReference(), $where, $params);
+
+        $GLOBALS['TL_MODELS'][static::getTable()] = get_class();
+        return static::findBy(array($where), $params, array('order' => $filter->getOrderBy()));
+    }
+
+    
+    protected static function appendWhereForDate(\DateTime $startDate, \DateTime $endDate, $field, &$where, array &$params)
+    {        
+        $where .= ($where != '') ? ' AND ' : '';
+        $where .= sprintf('(%s >= ? AND %s <= ?)', $field, $field);
+
+        $params[] = $startDate->getTimestamp();
+        $params[] = $endDate->getTimestamp();
+
+        return true;
     }
     
     
