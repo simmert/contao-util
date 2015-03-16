@@ -26,8 +26,8 @@ class DateFilter extends \Util\AbstractFilter
             return;
         }
 
-        $startDate = new \DateTime(\Input::get('startDate'));
-        $endDate = new \DateTime(\Input::get('endDate'));
+        $startDate = new \DateTime(\Contao\Input::get('startDate'));
+        $endDate = new \DateTime(\Contao\Input::get('endDate'));
 
         if ($startDate !== false && $endDate !== false && $startDate <= $endDate) {
             $this->startDate = $startDate;
@@ -57,24 +57,18 @@ class DateFilter extends \Util\AbstractFilter
 
     public function getFields()
     {
-        $fields = array(
+        return array(
             'startDate' => array(
-                'label' => &$GLOBALS['TL_LANG']['util']['filter']['startDate'],
+                'label'     => &$GLOBALS['TL_LANG']['util']['filter']['startDate'],
                 'inputType' => 'text',
+                'value'     => $this->startDate->format($GLOBALS['TL_CONFIG']['dateFormat']),
             ),
             'endDate' => array(
-                'label' => &$GLOBALS['TL_LANG']['util']['filter']['endDate'],
+                'label'     => &$GLOBALS['TL_LANG']['util']['filter']['endDate'],
                 'inputType' => 'text',
+                'value'     => $this->endDate->format($GLOBALS['TL_CONFIG']['dateFormat']),
             ),
         );
-
-        // Set values if filter is currently applied
-        if ($this->getStartDate() !== null) {
-            $fields['startDate']['value'] = $this->startDate->format($GLOBALS['TL_CONFIG']['dateFormat']);
-            $fields['endDate']['value'] = $this->endDate->format($GLOBALS['TL_CONFIG']['dateFormat']);
-        }
-
-        return $fields;
     }
     
     
@@ -82,6 +76,9 @@ class DateFilter extends \Util\AbstractFilter
     {
         $startDate = new \DateTime();
         $endDate = clone $startDate;
+        
+        $range = new \DateInterval('P1D'); // Range of one day
+        $endDate->add($range);
 
         $this->setStartDate($startDate);
         $this->setEndDate($endDate);
