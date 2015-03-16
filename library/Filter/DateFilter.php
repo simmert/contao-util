@@ -22,6 +22,10 @@ class DateFilter extends \Util\AbstractFilter
     {
         $this->reset();
 
+        if (!$this->isApplied()) {
+            return;
+        }
+
         $startDate = new \DateTime(\Input::get('startDate'));
         $endDate = new \DateTime(\Input::get('endDate'));
 
@@ -34,7 +38,7 @@ class DateFilter extends \Util\AbstractFilter
     
     public function isApplied()
     {
-        return (\Input::get('startDate') || \Input::get('endDate'));
+        return (\Input::get('startDate') && \Input::get('endDate'));
     }
     
     
