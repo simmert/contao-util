@@ -38,20 +38,13 @@ class MemberModel extends \Contao\MemberModel
     
     public static function findByBirthdayFilter(\Util\DateFilter $filter)
     {
-        // TODO
-        return static::findAll();
-/*
-        SELECT
-         name,birthday,
-         FLOOR(DATEDIFF(DATE(NOW()),birthday) / 365.25) AS age_now,
-         FLOOR(DATEDIFF(DATE_ADD(DATE(NOW()),INTERVAL 30 DAY),birthday) / 365.25) AS age_future
+        $where = '';
+        $params = array();
 
-        FROM user
+        static::appendWhereForBirthday($filter->getStartDate(), $filter->getEndDate(), $where, $params);
 
-        WHERE 1 = (FLOOR(DATEDIFF(DATE_ADD(DATE(NOW()),INTERVAL 30 DAY),birthday) / 365.25)) - (FLOOR(DATEDIFF(DATE(NOW()),birthday) / 365.25))
-
-        ORDER BY MONTH(birthday),DAY(birthday)
-*/
+        $GLOBALS['TL_MODELS'][static::getTable()] = get_class();
+        return static::findBy(array($where), $params, array('order' => 'MONTH(FROM_UNIXTIME(dateOfBirth)), DAY(FROM_UNIXTIME(dateOfBirth))'));
     }
 
     
@@ -62,6 +55,21 @@ class MemberModel extends \Contao\MemberModel
 
         $params[] = $startDate->getTimestamp();
         $params[] = $endDate->getTimestamp();
+
+        return true;
+    }
+    
+    
+    protected static function appendWhereForBirthday(\DateTime $startDate, \DateTime $endDate, &$where, array &$params)
+    {        
+        $where .= ($where != '') ? ' AND ' : '';
+        $where .= '(
+            dateOfBirth > 0 AND 
+            (FLOOR(DATEDIFF(FROM_UNIXTIME(?), FROM_UNIXTIME(dateOfBirth)) / 365.25)) - (FLOOR(DATEDIFF(FROM_UNIXTIME(?), FROM_UNIXTIME(dateOfBirth)) / 365.25)) = 1
+        )';
+
+        $params[] = $endDate->getTimestamp();
+        $params[] = $startDate->getTimestamp();
 
         return true;
     }
