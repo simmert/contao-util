@@ -12,6 +12,18 @@ namespace Util;
  */
 abstract class FragmentHelper
 {
+    public static function fragmentsContain($fragmentName, array &$fragments)
+    {
+        foreach ($fragments as &$fragment) {
+            if ($fragment['name'] == $fragmentName) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+
+
     public static function getBackendPreview(array $fragments, $extension, $table, $prefix)
     {
         $fieldName = $extension . '_fragments_' . $prefix;

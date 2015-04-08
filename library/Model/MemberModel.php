@@ -11,15 +11,67 @@ namespace Util;
  * @author André Simmert <contao@simmert.net>
  * @license http://opensource.org/licenses/MIT MIT 
  */
-abstract class AbstractMemberModel extends \MemberModel
+class MemberModel extends \Contao\MemberModel
 {
     public static function findAll(array $options=array())
     {
         if (count($options) == 0) {
-            $options = array('order' => 'company, lastname, firstname');
+            $options = array('order' => 'lastname, firstname');
         }
         
+        $GLOBALS['TL_MODELS'][static::getTable()] = get_class();
         return parent::findAll($options);
+    }
+    
+    
+    public static function findByFilter(\Util\MemberFilter $filter)
+    {
+        $where = '';
+        $params = array();
+
+        static::appendWhereForDate($filter->getStartDate(), $filter->getEndDate(), $filter->getDateReference(), $where, $params);
+
+        $GLOBALS['TL_MODELS'][static::getTable()] = get_class();
+        return static::findBy(array($where), $params, array('order' => $filter->getOrderBy()));
+    }
+    
+    
+    public static function findByBirthdayFilter(\Util\DateFilter $filter)
+    {
+        $where = '';
+        $params = array();
+
+        static::appendWhereForBirthday($filter->getStartDate(), $filter->getEndDate(), $where, $params);
+
+        $GLOBALS['TL_MODELS'][static::getTable()] = get_class();
+        return static::findBy(array($where), $params, array('order' => 'MONTH(FROM_UNIXTIME(dateOfBirth)), DAY(FROM_UNIXTIME(dateOfBirth))'));
+    }
+
+    
+    protected static function appendWhereForDate(\DateTime $startDate, \DateTime $endDate, $field, &$where, array &$params)
+    {        
+        $where .= ($where != '') ? ' AND ' : '';
+        $where .= sprintf('(%s >= ? AND %s <= ?)', $field, $field);
+
+        $params[] = $startDate->getTimestamp();
+        $params[] = $endDate->getTimestamp();
+
+        return true;
+    }
+    
+    
+    protected static function appendWhereForBirthday(\DateTime $startDate, \DateTime $endDate, &$where, array &$params)
+    {        
+        $where .= ($where != '') ? ' AND ' : '';
+        $where .= '(
+            dateOfBirth > 0 AND 
+            (FLOOR(DATEDIFF(FROM_UNIXTIME(?), FROM_UNIXTIME(dateOfBirth)) / 365.25)) - (FLOOR(DATEDIFF(FROM_UNIXTIME(?), FROM_UNIXTIME(dateOfBirth)) / 365.25)) = 1
+        )';
+
+        $params[] = $endDate->getTimestamp();
+        $params[] = $startDate->getTimestamp();
+
+        return true;
     }
     
     
@@ -82,6 +134,30 @@ abstract class AbstractMemberModel extends \MemberModel
         $dateOfBirth->setTimestamp($this->dateOfBirth);
 
         return $dateOfBirth;
+    }
+    
+    
+    public function getAge()
+    {
+        $dateOfBirth = $this->getDateOfBirth();
+        
+        if ($dateOfBirth === null) {
+            return null;
+        }
+        
+        return $dateOfBirth->diff(new \DateTime());
+    }
+    
+    
+    public function getAgeInYears()
+    {
+        $age = $this->getAge();
+        
+        if ($age !== null) {
+            return intval($age->format('%y'));
+        }
+        
+        return null;
     }
     
     

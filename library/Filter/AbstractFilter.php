@@ -13,6 +13,9 @@ namespace Util;
  */
 abstract class AbstractFilter extends \Controller
 {
+    protected $orderBy = 'pid, id';
+
+
     public function __construct()
     {
         parent::__construct();
@@ -40,8 +43,9 @@ abstract class AbstractFilter extends \Controller
 
         // Initialize the widgets
         $widgets = array();
-        foreach ($fields as &$field)
+        foreach ($fields as $name => &$field)
         {
+            $field['name'] = $name;
             $class = $GLOBALS[$context][$field['inputType']];
 
             // Continue if the class is not defined
@@ -50,15 +54,30 @@ abstract class AbstractFilter extends \Controller
             }
 
             $field['eval']['required'] = $field['eval']['mandatory'];
-            $widget = new $class($this->prepareForWidget($field, $field['name'], $field['value']));
+            $widget = new $class($this->prepareForWidget($field, $name, $field['value']));
 
-            $widgets[$field['name']] = $widget;
+            $widgets[$name] = $widget;
         }
 
         return $widgets;
     }
 
+
+    public function setOrderBy($orderBy)
+    {
+        $this->orderBy = $orderBy;
+    }
+
+
+    public function getOrderBy()
+    {
+        return $this->orderBy;
+    }
     
+    
+    public function reset() {}
+
+
     abstract public function getFields();
     abstract public function getUrlParams($forceOutput=false);
     abstract public function isApplied();

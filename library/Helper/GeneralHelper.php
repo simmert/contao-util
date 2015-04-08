@@ -94,7 +94,7 @@ class GeneralHelper
     }
     
     
-    public static function generateNavigationMarkup($urlBuilder, array $items, $activeId=null, $level=1)
+    public static function generateNavigationMarkup(array $items, $activeId=null, $level=1)
     {
         $itemCount = count($items);
 
@@ -135,11 +135,11 @@ class GeneralHelper
             if ($item['id'] == $activeId) {
                 $markup .= '<span class="' . $classString . '">' . $item['label'] . '</span>';
             } else {
-                $markup .= '<a class="' . $classString . '" href="' . $urlBuilder->buildUrl($item, 'category', null) . '" title="' . $item['label'] . '">' . $item['label'] . '</a>';
+                $markup .= '<a class="' . $classString . '" href="' . $item['url'] . '" title="' . $item['label'] . '">' . $item['label'] . '</a>';
             }
 
             if (isset($item['children'])) {
-                $markup .= self::generateNavigationMarkup($urlBuilder, $item['children'], $activeId, $level+1);
+                $markup .= self::generateNavigationMarkup($item['children'], $activeId, $level+1);
             }
 
             $markup .= '</li>';
@@ -182,5 +182,18 @@ class GeneralHelper
                 $item[$fieldName] .= ' ' . $prefix . 'last';
             }
         }
+    }
+    
+    
+    public static function generateRandomString($length=16)
+    {
+        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $charactersLength = strlen($characters);
+        $randomString = '';
+
+        for ($i=0; $i<$length; $i++) {
+            $randomString .= $characters[mt_rand(0, $charactersLength - 1)];
+        }
+        return $randomString;
     }
 }
