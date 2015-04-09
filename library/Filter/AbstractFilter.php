@@ -9,33 +9,50 @@ namespace Util;
  * @package Util
  * @copyright Copyright (c) 2014 André Simmert
  * @author André Simmert <contao@simmert.net>
- * @license http://opensource.org/licenses/MIT MIT 
+ * @license http://opensource.org/licenses/MIT MIT
  */
-abstract class AbstractFilter extends \Controller
+abstract class AbstractFilter extends \Controller implements \Util\FilterInterface
 {
-    protected $orderBy = 'pid, id';
+    protected $session = null,
+              $orderBy = 'pid, id';
 
 
     public function __construct()
     {
         parent::__construct();
-        
-        $this->apply();
+
+        $this->session = new \Util\NamespacedSession($this);
+
+        if ($this->isApplied()) {
+            $this->apply();
+        } else {
+            $this->reset();
+        }
     }
-    
-    
+
+
+    public function get($key)
+    {
+        if (\Input::get($key)) {
+            return \Input::get($key);
+        }
+
+        return $this->session->get($key);
+    }
+
+
     public function getFrontendWidgets()
     {
         return $this->getWidgets();
     }
-    
-    
+
+
     public function getBackendWidgets()
     {
         return $this->getWidgets('BE_FFL');
     }
-    
-    
+
+
     public function getWidgets($context='TL_FFL')
     {
         // Form fields
@@ -73,10 +90,12 @@ abstract class AbstractFilter extends \Controller
     {
         return $this->orderBy;
     }
-    
-    
-    public function reset() {}
 
+
+    public function reset()
+    {
+        $this->seesion->reset();
+    }
 
     abstract public function getFields();
     abstract public function getUrlParams($forceOutput=false);
