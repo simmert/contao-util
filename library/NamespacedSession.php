@@ -40,12 +40,14 @@ class NamespacedSession
     public function reset()
     {
         if ($this->namespace === null) {
-            return $this->seesion->setData(array());
+            return $this->session->setData(array());
         }
 
-        foreach ($globalData as $key => &$value) {
+        $data = $this->session->getData();
+
+        foreach ($data as $key => &$value) {
             if (\Util\StringHelper::startsWith($key, $this->namespace . '_')) {
-                unset($data[$key]);
+                $this->session->remove($key);
             }
         }
     }

@@ -94,7 +94,7 @@ abstract class AbstractFilter extends \Controller implements \Util\FilterInterfa
 
     public function reset()
     {
-        $this->seesion->reset();
+        $this->session->reset();
     }
 
     abstract public function getFields();
