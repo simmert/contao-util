@@ -164,4 +164,13 @@ abstract class AbstractModel extends \Model
         
         return static::postFind($objResult);
     }
+    
+    
+    /**
+     * Triggers the preSave method manually if needed.
+     */
+    public function update()
+    {
+        $this->setRow($this->preSave($this->row()));
+    }
 }
