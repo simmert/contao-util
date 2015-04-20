@@ -83,7 +83,27 @@ class MemberModel extends \Contao\MemberModel
             $row['label'] = $this->getLabel();
         }
         
+        $row['name']        = $this->getName();
+        $row['salutation']  = $this->getSalutation();
+        $row['address']     = $this->getInvoiceAddress();
+        $row['country']     = $this->getCountry();
+        
         return $row;
+    }
+    
+    
+    public function getInsertTags()
+    {
+        return array(
+            'user.username'     => $this->username,
+            'user.email'        => $this->email,
+            'user.name'         => $this->getName(),
+            'user.salutation'   => $this->getSalutation(),
+            'user.firstname'    => $this->firstname,
+            'user.lastname'     => $this->lastname,
+            'user.address'      => $this->getInvoiceAddress(),
+            'user.country'      => $this->getCountry(),
+        );
     }
     
     
@@ -112,6 +132,20 @@ class MemberModel extends \Contao\MemberModel
     public function getName()
     {
         return $this->firstname . ' ' . $this->lastname;
+    }
+    
+    
+    public function getSalutation()
+    {
+        if (intval($this->salutation) == 0) {
+            $name = $this->lastname;
+        } else {
+            $name = $this->firstname;
+        }
+        
+        $gender = ($this->gender) ? $this->gender : 'undefined';
+        
+        return sprintf($GLOBALS['TL_LANG']['util']['member_model']['salutation'][intval($this->salutation)][$gender], $name);
     }
 
 

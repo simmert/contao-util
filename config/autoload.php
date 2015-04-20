@@ -42,8 +42,10 @@ ClassLoader::addClasses(array
 	'Util\StringHelper'           => 'system/modules/util/library/Helper/StringHelper.php',
 	'Util\AbstractMemberModel'    => 'system/modules/util/library/Model/AbstractMemberModel.php',
 	'Util\AbstractModel'          => 'system/modules/util/library/Model/AbstractModel.php',
-	'Util\MemberModel'            => 'system/modules/util/library/Model/MemberModel.php',
 	'Util\NamespacedSession'      => 'system/modules/util/library/NamespacedSession.php',
+
+	// Models
+	'Util\MemberModel'            => 'system/modules/util/models/MemberModel.php',
 
 	// Widgets
 	'Util\Legend'                 => 'system/modules/util/widgets/Legend.php',
