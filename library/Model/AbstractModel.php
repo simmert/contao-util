@@ -8,19 +8,19 @@ namespace Util;
  * @package Util
  * @copyright Copyright (c) 2013-2014 André Simmert
  * @author André Simmert <contao@simmert.net>
- * @license http://opensource.org/licenses/MIT MIT 
+ * @license http://opensource.org/licenses/MIT MIT
  */
 abstract class AbstractModel extends \Model
 {
     protected static $translatable = false,
                      $translateFrontendOnly = true,
                      $translations = array();
-    
-    
+
+
     public function __construct(\Database\Result $objResult=null)
-    {        
+    {
         parent::__construct($objResult);
-        
+
         if (static::$translatable && isset(static::$translations[$this->id])) {
             $this->translate(static::$translations[$this->id]);
         }
@@ -34,34 +34,34 @@ abstract class AbstractModel extends \Model
         if (!isset($row['label'])) {
             $row['label'] = $this->getLabel();
         }
-        
+
         return $row;
     }
-    
-    
+
+
     public function getLabel()
     {
         return $this->id;
     }
-    
-    
+
+
     public function generateHash()
     {
         $row = $this->row();
-        
+
         // Remove fields that do not represent data changes
         $metaFields = $this->getMetaFields();
-        
+
         foreach ($metaFields as &$field) {
             if (isset($row[$field])) {
                 unset($row[$field]);
             }
         }
-        
+
         return crc32(serialize($row));
     }
-    
-    
+
+
     /**
      * Return array of fields that do not represent model changes
      */
@@ -69,8 +69,8 @@ abstract class AbstractModel extends \Model
     {
         return array('tstamp', 'hash');
     }
-    
-    
+
+
     protected function translate(array &$translation)
     {
         foreach ($translation as $field => $value) {
@@ -83,8 +83,8 @@ abstract class AbstractModel extends \Model
             }
         }
     }
-    
-    
+
+
 	protected function preSave(array $arrSet)
 	{
         if (static::$translatable && (!static::$translateFrontendOnly || TL_MODE == 'FE')) {
@@ -93,27 +93,27 @@ abstract class AbstractModel extends \Model
 
 		return $arrSet;
 	}
-    
-    
+
+
     protected static function postFind(\Database\Result $objResult)
     {
         if (static::$translatable && (!static::$translateFrontendOnly || TL_MODE == 'FE')) {
             return static::fetchTranslations($objResult);
         }
-        
+
         return $objResult;
     }
-    
-    
+
+
     protected static function fetchTranslations(\Database\Result $result)
     {
         if ($result->count() == 0 || $GLOBALS['TL_LANGUAGE'] == $GLOBALS['TL_CONFIG']['default_language']) {
             return $result;
         }
-        
+
         $ids = $result->fetchEach('id');
         $result->reset();
-        
+
         $translationStatement = \Database::getInstance()->prepare('
             SELECT *
             FROM ' . static::$strTable . '_translation
@@ -123,7 +123,7 @@ abstract class AbstractModel extends \Model
         $translationResult = $translationStatement->execute(array(
             $GLOBALS['TL_LANGUAGE']
         ));
-        
+
         if ($translationResult->count() == 0) {
             return $result;
         }
@@ -138,34 +138,44 @@ abstract class AbstractModel extends \Model
 
         return $result;
     }
-    
-    
+
+
     protected static function queryForCollection($sql, $params=array())
     {
         $objResult = self::queryForResult($sql, $params);
 
         return \Model\Collection::createFromDbResult($objResult, static::$strTable);
     }
-    
-    
+
+
     protected static function queryForArray($sql, $params=array())
     {
         $objResult = self::queryForResult($sql, $params);
 
         return $objResult->fetchAllAssoc();
     }
-    
-    
+
+
     protected static function queryForResult($sql, $params=array())
     {
         $objStatement = \Database::getInstance()->prepare($sql);
         $objStatement = static::preFind($objStatement);
         $objResult = $objStatement->execute($params);
-        
+
         return static::postFind($objResult);
     }
-    
-    
+
+
+    protected function queryForCount($sql, $params=array())
+    {
+        if (!\Util\StringHelper::startsWith($sql, 'SELECT')) {
+            $sql = 'SELECT COUNT(*) AS count ' . $sql;
+        }
+
+        return intval(\Database::getInstance()->prepare($sql)->execute($params)->count);
+    }
+
+
     /**
      * Triggers the preSave method manually if needed.
      */
