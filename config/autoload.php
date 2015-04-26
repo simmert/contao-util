@@ -43,6 +43,7 @@ ClassLoader::addClasses(array
 	'Util\AbstractMemberModel'    => 'system/modules/util/library/Model/AbstractMemberModel.php',
 	'Util\AbstractModel'          => 'system/modules/util/library/Model/AbstractModel.php',
 	'Util\NamespacedSession'      => 'system/modules/util/library/NamespacedSession.php',
+	'Util\Paginator'              => 'system/modules/util/library/Paginator.php',
 
 	// Models
 	'Util\MemberModel'            => 'system/modules/util/models/MemberModel.php',
