@@ -58,7 +58,7 @@ class Paginator
             return 1;
         }
 
-        return abs(intval($requestedPage));
+        return max(abs(intval($requestedPage)), 1);
     }
 
 
