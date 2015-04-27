@@ -166,7 +166,7 @@ abstract class AbstractModel extends \Model
     }
 
 
-    protected function queryForCount($sql, $params=array())
+    protected static function queryForCount($sql, $params=array())
     {
         if (!\Util\StringHelper::startsWith($sql, 'SELECT')) {
             $sql = 'SELECT COUNT(*) AS count ' . $sql;
