@@ -11,7 +11,7 @@ namespace Util;
  * @author André Simmert <contao@simmert.net>
  * @license http://opensource.org/licenses/MIT MIT 
  */
-class MemberModel extends \Contao\MemberModel
+class MemberModel extends \Contao\MemberModel implements \Util\ModelInterface
 {
     public static function findAll(array $options=array())
     {
@@ -218,5 +218,14 @@ class MemberModel extends \Contao\MemberModel
         $objResult = $objStatement->execute($params);
         
         return static::postFind($objResult);
+    }
+    
+    
+    /**
+     * Triggers the preSave method manually if needed.
+     */
+    public function update()
+    {
+        $this->setRow($this->preSave($this->row()));
     }
 }

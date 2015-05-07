@@ -10,7 +10,7 @@ namespace Util;
  * @author André Simmert <contao@simmert.net>
  * @license http://opensource.org/licenses/MIT MIT
  */
-abstract class AbstractModel extends \Model
+abstract class AbstractModel extends \Model implements \Util\ModelInterface
 {
     protected static $translatable = false,
                      $translateFrontendOnly = true,
