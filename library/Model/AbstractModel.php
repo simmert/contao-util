@@ -60,6 +60,18 @@ abstract class AbstractModel extends \Model implements \Util\ModelInterface
 
         return crc32(serialize($row));
     }
+    
+    
+    public function replaceInsertTags($string, $prefix='')
+    {
+        return \Util\GeneralHelper::replaceInsertTags($this->getInsertTags($prefix), $string);
+    }
+    
+    
+    public function getInsertTags($prefix='')
+    {
+        return array();
+    }
 
 
     /**

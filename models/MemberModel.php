@@ -92,18 +92,42 @@ class MemberModel extends \Contao\MemberModel implements \Util\ModelInterface
     }
     
     
-    public function getInsertTags()
+    public function replaceInsertTags($string, $prefix='user')
+    {
+        return \Util\GeneralHelper::replaceInsertTags($this->getInsertTags($prefix), $string);
+    }
+    
+    
+    public function getInsertTags($prefix='user')
     {
         return array(
-            'user.username'     => $this->username,
-            'user.email'        => $this->email,
-            'user.name'         => $this->getName(),
-            'user.salutation'   => $this->getSalutation(),
-            'user.firstname'    => $this->firstname,
-            'user.lastname'     => $this->lastname,
-            'user.address'      => $this->getInvoiceAddress(),
-            'user.country'      => $this->getCountry(),
+            $prefix . '.label'        => $this->getLabel(),
+            $prefix . '.username'     => $this->username,
+            $prefix . '.email'        => $this->email,
+            $prefix . '.name'         => $this->getName(),
+            $prefix . '.salutation'   => $this->getSalutation(),
+            $prefix . '.firstname'    => $this->firstname,
+            $prefix . '.lastname'     => $this->lastname,
+            $prefix . '.address'      => $this->getInvoiceAddress(),
+            $prefix . '.country'      => $this->getCountry(),
         );
+    }
+    
+    
+    public function generateHash()
+    {
+        $row = $this->row();
+
+        // Remove fields that do not represent data changes
+        $metaFields = $this->getMetaFields();
+
+        foreach ($metaFields as &$field) {
+            if (isset($row[$field])) {
+                unset($row[$field]);
+            }
+        }
+
+        return crc32(serialize($row));
     }
     
     
@@ -218,6 +242,15 @@ class MemberModel extends \Contao\MemberModel implements \Util\ModelInterface
         $objResult = $objStatement->execute($params);
         
         return static::postFind($objResult);
+    }
+    
+    
+    /**
+     * Return array of fields that do not represent model changes
+     */
+    protected function getMetaFields()
+    {
+        return array('tstamp', 'hash');
     }
     
     

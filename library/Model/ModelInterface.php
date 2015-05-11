@@ -11,4 +11,7 @@ interface ModelInterface
     public function toArray();
     public function getLabel();
     public function update();
+    public function generateHash();
+    public function replaceInsertTags($string, $prefix);
+    public function getInsertTags($prefix);
 }
