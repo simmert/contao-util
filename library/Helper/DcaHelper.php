@@ -12,14 +12,14 @@ namespace Util;
  */
 class DcaHelper
 {
-    public static function generateSelectOptions(\Model\Collection $recordCollection=null, \Model\Collection $categoryCollection=null)
+    public static function generateSelectOptions(\Model\Collection $recordCollection=null, \Model\Collection $categoryCollection=null, array $options=array())
     {
-        $categories = $options = array();
-        
+        $categories = array();
+
         if ($recordCollection === null) {
             return $options;
         }
-        
+
         while ($categoryCollection !== null && $categoryCollection->next()) {
             $categories[$categoryCollection->id] = $categoryCollection->current()->getLabel();
         }
@@ -31,11 +31,11 @@ class DcaHelper
         } else {
             while ($recordCollection->next()) {
                 $record = $recordCollection->current();
-                
+
                 if (!isset($options[$categories[$record->pid]])) {
                     $options[$categories[$record->pid]] = array();
                 }
-                
+
                 $options[$categories[$record->pid]][$record->id] = $record->getLabel();
             }
         }
