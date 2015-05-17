@@ -60,14 +60,14 @@ abstract class AbstractModel extends \Model implements \Util\ModelInterface
 
         return crc32(serialize($row));
     }
-    
-    
+
+
     public function replaceInsertTags($string, $prefix='')
     {
         return \Util\GeneralHelper::replaceInsertTags($this->getInsertTags($prefix), $string);
     }
-    
-    
+
+
     public function getInsertTags($prefix='')
     {
         return array();
@@ -156,6 +156,7 @@ abstract class AbstractModel extends \Model implements \Util\ModelInterface
     {
         $objResult = self::queryForResult($sql, $params);
 
+        static::setTlModel();
         return \Model\Collection::createFromDbResult($objResult, static::$strTable);
     }
 
@@ -185,6 +186,12 @@ abstract class AbstractModel extends \Model implements \Util\ModelInterface
         }
 
         return intval(\Database::getInstance()->prepare($sql)->execute($params)->count);
+    }
+
+
+    public static function setTlModel()
+    {
+        $GLOBALS['TL_MODELS'][static::getTable()] = get_called_class();
     }
 
 

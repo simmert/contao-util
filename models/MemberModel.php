@@ -9,7 +9,7 @@ namespace Util;
  * @package Util
  * @copyright Copyright (c) 2014 André Simmert
  * @author André Simmert <contao@simmert.net>
- * @license http://opensource.org/licenses/MIT MIT 
+ * @license http://opensource.org/licenses/MIT MIT
  */
 class MemberModel extends \Contao\MemberModel implements \Util\ModelInterface
 {
@@ -18,12 +18,12 @@ class MemberModel extends \Contao\MemberModel implements \Util\ModelInterface
         if (count($options) == 0) {
             $options = array('order' => 'lastname, firstname');
         }
-        
-        $GLOBALS['TL_MODELS'][static::getTable()] = get_class();
+
+        static::setTlModel();
         return parent::findAll($options);
     }
-    
-    
+
+
     public static function findByFilter(\Util\MemberFilter $filter)
     {
         $where = '';
@@ -31,11 +31,11 @@ class MemberModel extends \Contao\MemberModel implements \Util\ModelInterface
 
         static::appendWhereForDate($filter->getStartDate(), $filter->getEndDate(), $filter->getDateReference(), $where, $params);
 
-        $GLOBALS['TL_MODELS'][static::getTable()] = get_class();
+        static::setTlModel();
         return static::findBy(array($where), $params, array('order' => $filter->getOrderBy()));
     }
-    
-    
+
+
     public static function findByBirthdayFilter(\Util\DateFilter $filter)
     {
         $where = '';
@@ -43,13 +43,13 @@ class MemberModel extends \Contao\MemberModel implements \Util\ModelInterface
 
         static::appendWhereForBirthday($filter->getStartDate(), $filter->getEndDate(), $where, $params);
 
-        $GLOBALS['TL_MODELS'][static::getTable()] = get_class();
+        static::setTlModel();
         return static::findBy(array($where), $params, array('order' => 'MONTH(FROM_UNIXTIME(dateOfBirth)), DAY(FROM_UNIXTIME(dateOfBirth))'));
     }
 
-    
+
     protected static function appendWhereForDate(\DateTime $startDate, \DateTime $endDate, $field, &$where, array &$params)
-    {        
+    {
         $where .= ($where != '') ? ' AND ' : '';
         $where .= sprintf('(%s >= ? AND %s <= ?)', $field, $field);
 
@@ -58,13 +58,13 @@ class MemberModel extends \Contao\MemberModel implements \Util\ModelInterface
 
         return true;
     }
-    
-    
+
+
     protected static function appendWhereForBirthday(\DateTime $startDate, \DateTime $endDate, &$where, array &$params)
-    {        
+    {
         $where .= ($where != '') ? ' AND ' : '';
         $where .= '(
-            dateOfBirth > 0 AND 
+            dateOfBirth > 0 AND
             (FLOOR(DATEDIFF(FROM_UNIXTIME(?), FROM_UNIXTIME(dateOfBirth)) / 365.25)) - (FLOOR(DATEDIFF(FROM_UNIXTIME(?), FROM_UNIXTIME(dateOfBirth)) / 365.25)) = 1
         )';
 
@@ -73,8 +73,8 @@ class MemberModel extends \Contao\MemberModel implements \Util\ModelInterface
 
         return true;
     }
-    
-    
+
+
     public function toArray()
     {
         $row = $this->row();
@@ -82,22 +82,22 @@ class MemberModel extends \Contao\MemberModel implements \Util\ModelInterface
         if (!isset($row['label'])) {
             $row['label'] = $this->getLabel();
         }
-        
+
         $row['name']        = $this->getName();
         $row['salutation']  = $this->getSalutation();
         $row['address']     = $this->getInvoiceAddress();
         $row['country']     = $this->getCountry();
-        
+
         return $row;
     }
-    
-    
+
+
     public function replaceInsertTags($string, $prefix='user')
     {
         return \Util\GeneralHelper::replaceInsertTags($this->getInsertTags($prefix), $string);
     }
-    
-    
+
+
     public function getInsertTags($prefix='user')
     {
         return array(
@@ -112,8 +112,8 @@ class MemberModel extends \Contao\MemberModel implements \Util\ModelInterface
             $prefix . '.country'      => $this->getCountry(),
         );
     }
-    
-    
+
+
     public function generateHash()
     {
         $row = $this->row();
@@ -129,8 +129,8 @@ class MemberModel extends \Contao\MemberModel implements \Util\ModelInterface
 
         return crc32(serialize($row));
     }
-    
-    
+
+
     public function getInvoiceAddress()
     {
         return trim(
@@ -141,24 +141,24 @@ class MemberModel extends \Contao\MemberModel implements \Util\ModelInterface
             strtoupper($this->getCountry())
         );
     }
-    
-    
+
+
     public function getCountry()
     {
         if ($this->country) {
             return $GLOBALS['TL_LANG']['CNT'][$this->country];
         }
-        
+
         return null;
     }
-    
-    
+
+
     public function getName()
     {
         return $this->firstname . ' ' . $this->lastname;
     }
-    
-    
+
+
     public function getSalutation()
     {
         if (intval($this->salutation) == 0) {
@@ -166,9 +166,9 @@ class MemberModel extends \Contao\MemberModel implements \Util\ModelInterface
         } else {
             $name = $this->firstname;
         }
-        
+
         $gender = ($this->gender) ? $this->gender : 'undefined';
-        
+
         return sprintf($GLOBALS['TL_LANG']['util']['member_model']['salutation'][intval($this->salutation)][$gender], $name);
     }
 
@@ -180,8 +180,8 @@ class MemberModel extends \Contao\MemberModel implements \Util\ModelInterface
 
         return $label . $city;
     }
-    
-    
+
+
     public function getDateOfBirth()
     {
         if (!$this->dateOfBirth) {
@@ -193,58 +193,75 @@ class MemberModel extends \Contao\MemberModel implements \Util\ModelInterface
 
         return $dateOfBirth;
     }
-    
-    
+
+
     public function getAge()
     {
         $dateOfBirth = $this->getDateOfBirth();
-        
+
         if ($dateOfBirth === null) {
             return null;
         }
-        
+
         return $dateOfBirth->diff(new \DateTime());
     }
-    
-    
+
+
     public function getAgeInYears()
     {
         $age = $this->getAge();
-        
+
         if ($age !== null) {
             return intval($age->format('%y'));
         }
-        
+
         return null;
     }
-    
-    
+
+
+    public function getEmailRecipient()
+    {
+        if (trim($this->email) == '') {
+            return null;
+        }
+
+        return sprintf('%s %s &lt;%s&gt;', $this->firstname, $this->lastname, $this->email);
+    }
+
+
     protected static function queryForCollection($sql, $params=array())
     {
         $objResult = self::queryForResult($sql, $params);
 
+        static::setTlModel();
         return \Model\Collection::createFromDbResult($objResult, static::$strTable);
     }
-    
-    
+
+
     protected static function queryForArray($sql, $params=array())
     {
         $objResult = self::queryForResult($sql, $params);
 
         return $objResult->fetchAllAssoc();
     }
-    
-    
+
+
     protected static function queryForResult($sql, $params=array())
     {
         $objStatement = \Database::getInstance()->prepare($sql);
         $objStatement = static::preFind($objStatement);
         $objResult = $objStatement->execute($params);
-        
+
         return static::postFind($objResult);
     }
-    
-    
+
+
+    public static function setTlModel()
+    {
+        $GLOBALS['TL_MODELS'][static::getTable()] = get_called_class();
+    }
+
+
     /**
      * Return array of fields that do not represent model changes
      */
@@ -252,8 +269,8 @@ class MemberModel extends \Contao\MemberModel implements \Util\ModelInterface
     {
         return array('tstamp', 'hash');
     }
-    
-    
+
+
     /**
      * Triggers the preSave method manually if needed.
      */

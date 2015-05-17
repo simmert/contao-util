@@ -14,4 +14,5 @@ interface ModelInterface
     public function generateHash();
     public function replaceInsertTags($string, $prefix);
     public function getInsertTags($prefix);
+    public static function setTlModel();
 }
