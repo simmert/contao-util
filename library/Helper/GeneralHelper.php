@@ -8,7 +8,7 @@ namespace Util;
  * @package Util/Helper
  * @copyright Copyright (c) 2013-2014 André Simmert
  * @author André Simmert <contao@simmert.net>
- * @license http://opensource.org/licenses/MIT MIT 
+ * @license http://opensource.org/licenses/MIT MIT
  */
 class GeneralHelper
 {
@@ -19,29 +19,31 @@ class GeneralHelper
             $tags[] = '|' . $tag . '|';
             $values[] = $value;
         }
-        
+
         return str_replace($tags, $values, $string);
     }
-    
-    
-    public static function parseCollection(\Contao\Model\Collection $collection=null, array $callback=null)
+
+
+    public static function parseCollection(\Contao\Model\Collection $collection=null, array $callback=null, array $params=array())
     {
         $parsedElements = array();
-        
+
         while ($collection !== null && $collection->next()) {
             if ($callback === null) {
                 $parsedElements[] = $collection->current()->toArray();
+            } else if (count($params) != 0) {
+                $parsedElements[] = call_user_func_array($callback, array_merge(array($collection->current()), $params));
             } else {
                 $parsedElements[] = call_user_func($callback, $collection->current());
             }
         }
-        
+
         self::addCssClassToListItems($parsedElements);
-        
+
         return $parsedElements;
     }
-    
-    
+
+
     public static function parseTableWizdardData($data)
     {
         if (trim($data) == '') {
@@ -53,27 +55,27 @@ class GeneralHelper
         if (!is_array($data) || !isset($data[0]) || trim($data[0][0]) == '') {
             return null;
         }
-        
+
         $rowCount = count($data);
         $colCount = count($data[0]);
-        
+
         $parsedData = array();
         for ($i=0; $i<$rowCount; $i++) {
             $parsedData[$i] = array(
                 'class' => 'row_' . $i,
                 'cols' => array()
             );
-            
+
             if ($i == 0) {
                 $parsedData[$i]['class'] .= ' row_first';
             }
-            
+
             if ($i == $rowCount-1) {
                 $parsedData[$i]['class'] .= ' row_last';
             }
-            
+
             $parsedData[$i]['class'] .= ($i%2) ? ' odd' : ' even';
-            
+
             for ($j=0; $j<$colCount; $j++) {
                 $parsedData[$i]['cols'][$j] = array(
                     'class' => 'col_' . $j,
@@ -89,11 +91,11 @@ class GeneralHelper
                 }
             }
         }
-        
+
         return $parsedData;
     }
-    
-    
+
+
     public static function generateNavigationMarkup(array $items, $activeId=null, $level=1)
     {
         $itemCount = count($items);
@@ -115,7 +117,7 @@ class GeneralHelper
             if (isset($item['children'])) {
                 $classes[] = 'submenu';
             }
-            
+
             if (self::childIsActive($item, $activeId)) {
                 $classes[] = 'trail';
             }
@@ -123,15 +125,15 @@ class GeneralHelper
             if ($i == 0) {
                 $classes[] = 'first';
             }
-            
+
             if ($i == $itemCount-1) {
                 $classes[] = 'last';
             }
-            
+
             $classString = implode(' ', $classes);
 
             $markup .= '<li class="' . $classString . '">';
-            
+
             if ($item['id'] == $activeId) {
                 $markup .= '<span class="' . $classString . '">' . $item['label'] . '</span>';
             } else {
@@ -149,24 +151,24 @@ class GeneralHelper
 
         return $markup;
     }
-    
-    
+
+
     protected static function childIsActive(array &$item, $activeId)
     {
         if (!isset($item['children']) || !is_array($item['children'])) {
             return false;
         }
-        
+
         foreach ($item['children'] as &$child) {
             if ($child['id'] == $activeId || self::childIsActive($child, $activeId)) {
                 return true;
             }
         }
-        
+
         return false;
     }
-    
-    
+
+
     public static function addCssClassToListItems(array &$items, $prefix='', $fieldName='cssClass')
     {
         $itemCount = count($items);
@@ -177,14 +179,14 @@ class GeneralHelper
             if ($i == 1) {
                 $item[$fieldName] .= ' ' . $prefix . 'first';
             }
-            
+
             if ($i == $itemCount) {
                 $item[$fieldName] .= ' ' . $prefix . 'last';
             }
         }
     }
-    
-    
+
+
     public static function generateRandomString($length=16)
     {
         $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
