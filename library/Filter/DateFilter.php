@@ -56,11 +56,13 @@ class DateFilter extends \Util\AbstractFilter implements \Util\DateFilterInterfa
                 'label'     => &$GLOBALS['TL_LANG']['util']['filter']['startDate'],
                 'inputType' => 'text',
                 'value'     => $this->getStartDate()->format($GLOBALS['TL_CONFIG']['dateFormat']),
+                'default'   => $this->getDefaultStartDate()->format($GLOBALS['TL_CONFIG']['dateFormat']),
             ),
             'endDate' => array(
                 'label'     => &$GLOBALS['TL_LANG']['util']['filter']['endDate'],
                 'inputType' => 'text',
                 'value'     => $this->getEndDate()->format($GLOBALS['TL_CONFIG']['dateFormat']),
+                'default'   => $this->getDefaultEndDate()->format($GLOBALS['TL_CONFIG']['dateFormat']),
             ),
         );
     }
@@ -70,14 +72,8 @@ class DateFilter extends \Util\AbstractFilter implements \Util\DateFilterInterfa
     {
         parent::reset();
 
-        $startDate = new \DateTime();
-        $endDate = clone $startDate;
-
-        $range = new \DateInterval('P1D'); // Range of one day
-        $endDate->add($range);
-
-        $this->setStartDate($startDate);
-        $this->setEndDate($endDate);
+        $this->setStartDate($this->getDefaultStartDate());
+        $this->setEndDate($this->getDefaultEndDate());
     }
 
 
@@ -94,6 +90,12 @@ class DateFilter extends \Util\AbstractFilter implements \Util\DateFilterInterfa
     }
 
 
+    public function getDefaultStartDate()
+    {
+        return new \DateTime();
+    }
+
+
     public function setEndDate(\DateTime $endDate)
     {
         $this->endDate = $endDate;
@@ -104,6 +106,17 @@ class DateFilter extends \Util\AbstractFilter implements \Util\DateFilterInterfa
     public function getEndDate()
     {
         return $this->endDate;
+    }
+
+
+    public function getDefaultEndDate()
+    {
+        $endDate = $this->getDefaultStartDate();
+
+        $range = new \DateInterval('P1D'); // Range of one day
+        $endDate->add($range);
+
+        return $endDate;
     }
 
 
