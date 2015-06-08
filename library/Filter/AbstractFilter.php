@@ -73,6 +73,10 @@ abstract class AbstractFilter extends \Controller implements \Util\FilterInterfa
             $field['eval']['required'] = $field['eval']['mandatory'];
             $widget = new $class($this->prepareForWidget($field, $name, $field['value']));
 
+            if (isset($field['default'])) {
+                $widget->default = $field['default'];
+            }
+
             $widgets[$name] = $widget;
         }
 
